@@ -2,19 +2,21 @@
 
 pragma solidity ^0.8.0;
 
-interface IStorage {
+import { AccessControl } from "@arewageek/access-control/contracts/AccessControl.sol";
+
+interface IStorage{
     event DataStored(string indexed key, string value);
 
     function store(string calldata _key, string calldata _value) external returns (bytes32 keyHash);
     function read(bytes32 _key) external view returns (string memory);
 }
 
-contract Storage {
+contract Storage is AccessControl{
     address public contractAddress;
 
     mapping(address => mapping(bytes32 => string)) private data;
 
-    function initializeContract(address _contractAddress) external {
+    function initializeContract(address _contractAddress) external onlyAdmin{
         contractAddress = _contractAddress;
     }
 
